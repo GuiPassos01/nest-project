@@ -15,14 +15,19 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
-  @Post()
+  @Post('/create')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAllUsers();
+  async findAll() {
+    try {
+      const users = await this.userService.findAllUsers();
+      return { success: true, data: users };
+    } catch (error) {
+      return { success: false, error: 'Erro ao buscar usuários' };
+    }
   }
 
   @Get(':id')
